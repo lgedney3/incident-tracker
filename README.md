@@ -14,7 +14,7 @@ A full-stack CRUD web application for tracking IT/facility incidents. Built with
 incident-tracker/
 ├── IncidentTracker.API/             # .NET 8 backend
 ├── IncidentTracker_angular18/       # Angular 18 frontend
-├── IncidentTracker_database/        # SQL Script to Create DB
+├── IncidentTracker_database/        # SQL Script to Seed DB
 └── README.md
 ```
 
