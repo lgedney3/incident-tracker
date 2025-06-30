@@ -28,7 +28,8 @@ incident-tracker/
 - Angular CLI: `npm install -g @angular/cli`
 - .NET 8 SDK
 - SQL Server (LocalDB, Express, or Developer Edition)
-- Visual Studio 2022+ (recommended)
+- Visual Studio 2022+
+- SQL Server Management Studio (recommended)
 
 ---
 
