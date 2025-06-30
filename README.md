@@ -14,7 +14,7 @@ A full-stack CRUD web application for tracking IT/facility incidents. Built with
 incident-tracker/
 ├── IncidentTracker.API/             # .NET 8 backend
 ├── IncidentTracker_angular18/       # Angular 18 frontend
-├── IncidentTracker_database/        # SQL Server .bak file
+├── IncidentTracker_database/        # SQL Script to Create DB
 └── README.md
 ```
 
@@ -34,11 +34,10 @@ incident-tracker/
 
 ### Database Setup
 
-1. Open **SQL Server Management Studio (SSMS)**.
-2. Right-click on `Databases` → `Restore Database...`.
-3. Select:
-   - **Source** → *Device* → Browse to `IncidentTracker_database/IncidentTrackerDb.bak`
-4. Click OK to restore.
+1. Open **SQL Server Management Studio**.
+2. Connect to your local SQL Server instance.
+3. Open the file `Database/IncidentTrackerDb.sql`.
+4. Run the script to create and seed the database.
 
 ---
 
