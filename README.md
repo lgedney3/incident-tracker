@@ -36,7 +36,7 @@ incident-tracker/
 
 1. Open **SQL Server Management Studio**.
 2. Connect to your local SQL Server instance.
-3. Open the file `Database/IncidentTrackerDb.sql`.
+3. Open the file `IncidentTracker_database/IncidentTrackerDb.sql`.
 4. Run the script to create and seed the database.
 
 ---
