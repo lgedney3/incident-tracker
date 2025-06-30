@@ -4,7 +4,7 @@ A full-stack CRUD web application for tracking IT/facility incidents. Built with
 
 - **Frontend**: Angular 18  
 - **Backend**: .NET 8 Web API  
-- **Database**: SQL Server (LocalDB or Express)
+- **Database**: SQL Server
 
 ---
 
