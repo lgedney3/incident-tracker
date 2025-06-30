@@ -1,0 +1,59 @@
+<!-- Navigation bar shown only if the user is logged in and not on login or create account pages -->
+<nav *ngIf="!hideNavbar" class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container-fluid">
+
+    <!-- Display the logged-in user's name -->
+    <a class="navbar-brand" *ngIf="currentUser">
+      Welcome, {{ currentUser.displayName }}
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mynavbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mynavbar">
+      <ul class="navbar-nav me-auto">
+        
+        <!-- Navigation links visible only to employees -->
+        <li class="nav-item" *ngIf="currentUser?.role === 'Employee'">
+          <a
+            class="nav-link"
+            routerLink="incident-list"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            View incidents
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="currentUser?.role === 'Employee'">
+          <a
+            class="nav-link"
+            routerLink="create-new-incident"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Create new incident
+          </a>
+        </li>
+      </ul>
+
+      <!-- Logout button -->
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="logout()"
+        *ngIf="currentUser"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

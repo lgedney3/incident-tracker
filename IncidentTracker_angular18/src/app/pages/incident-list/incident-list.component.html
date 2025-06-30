@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incident List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-xl-10">
+
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="h3 mb-1 fw-bold">Incident Management</h1>
+            <p class="text-muted">View and manage all reported incidents</p>
+          </div>
+
+          <!-- Employees only: Show "Create Incident" button -->
+          <button
+            *ngIf="currentUserRole === 'Employee'"
+            class="btn btn-primary"
+            (click)="goToCreateIncident()"
+          >
+            <i class="bi bi-plus-circle me-2"></i> Create New Incident
+          </button>
+        </div>
+
+        <!-- Filter Form -->
+        <form class="row g-3 mb-4">
+          <div class="col-md-4">
+            <!-- Two-way bind to search text -->
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search incidents..."
+              [(ngModel)]="searchText"
+              name="search"
+            />
+          </div>
+          <div class="col-md-3">
+            <!-- Two-way bind to status filter -->
+            <select class="form-select" [(ngModel)]="selectedStatus" name="status">
+              <option value="">All Statuses</option>
+              <option>Open</option>
+              <option>In Progress</option>
+              <option>Resolved</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <!-- Two-way bind to urgency filter -->
+            <select class="form-select" [(ngModel)]="selectedUrgency" name="urgency">
+              <option value="">All Urgencies</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <!-- Run filtering logic -->
+            <button
+              type="button"
+              class="btn btn-outline-primary w-100"
+              (click)="onSearchClick()"
+            >
+              <i class="bi bi-search me-1"></i> Search
+            </button>
+          </div>
+        </form>
+
+        <!-- Incident Cards -->
+        <div *ngIf="filteredList.length > 0; else emptyState">
+          <!-- Loop through paginated incidents -->
+          <div *ngFor="let item of paginatedList" class="card shadow-sm mb-4">
+
+            <!-- Header with dynamic badges -->
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-file-text me-2 text-primary"></i>
+                Incident #{{ item.id }}
+              </h5>
+              <div class="d-flex gap-2">
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-urgency-low': item.urgency === 'Low',
+                    'badge-urgency-medium': item.urgency === 'Medium',
+                    'badge-urgency-high': item.urgency === 'High'
+                  }"
+                >
+                  {{ item.urgency }}
+                </span>
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-status-open': item.status === 'Open',
+                    'badge-status-in-progress': item.status === 'In Progress',
+                    'badge-status-resolved': item.status === 'Resolved'
+                  }"
+                >
+                  {{ item.status }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Body content -->
+            <div class="card-body">
+              <h6 class="card-subtitle mb-3 text-primary fw-semibold">
+                <!-- Incident Title -->
+                {{ item.title }}
+              </h6>
+
+              <!-- Incident Details -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center text-muted mb-2">
+                    <i class="bi bi-clock me-2"></i>
+                    <!-- Created date -->
+                    <small>Created: {{ item.createdAt | date: 'short' }}</small>
+                  </div>
+                  <div class="d-flex align-items-center text-muted mb-2">
+                    <i class="bi bi-person me-2"></i>
+                    <small>
+                      <!-- Creator's name -->
+                      Created by: {{ item.createdByUserDisplayName || ('User #' + item.createdByUserId) }}
+                      <!-- Show "(you)" if created by current user -->
+                      <span *ngIf="currentUserRole === 'Employee' && item.createdByUserId === currentUserId">
+                        (you)
+                      </span>
+                    </small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center text-muted mb-2">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <!-- Location -->
+                    <small>Location: {{ item.location }}</small>
+                  </div>
+                  <div class="d-flex align-items-center text-muted mb-2">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <!-- Last updated at date -->
+                    <small>Last updated: {{ item.lastUpdatedAt | date: 'short' }}</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Incident Description -->
+              <div class="mb-0">
+                <label class="form-label fw-semibold text-dark">Description</label>
+                <div class="p-3 bg-light rounded border">
+                  {{ item.description }}
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="mt-4 d-flex justify-content-end gap-2">
+                <!-- Employee-specific buttons -->
+                <ng-container *ngIf="currentUserRole === 'Employee'">
+                  <button
+                    class="btn btn-outline-primary btn-sm"
+                    *ngIf="item.status === 'Open'"
+                    (click)="editIncident(item.id)"
+                  >
+                    <i class="bi bi-pencil me-1"></i> Edit
+                  </button>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    *ngIf="item.status === 'Open'"
+                    (click)="deleteIncident(item.id)"
+                  >
+                    <i class="bi bi-trash me-1"></i> Delete
+                  </button>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    *ngIf="item.status !== 'Open'"
+                    (click)="viewIncidentDetails(item.id)"
+                  >
+                    <i class="bi bi-eye me-1"></i> View Details
+                  </button>
+                </ng-container>
+
+                <!-- Support Agent-specific button -->
+                <ng-container *ngIf="currentUserRole === 'Support Agent'">
+                  <button
+                    class="btn btn-primary btn-sm"
+                    (click)="respondToIncident(item.id)"
+                  >
+                    <i class="bi bi-reply me-1"></i> Respond
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state if no incidents -->
+        <ng-template #emptyState>
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <i class="bi bi-inbox display-3 text-muted"></i>
+              <h5 class="mt-3">No incidents found</h5>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- Pagination Controls -->
+        <nav *ngIf="totalPages > 1" class="mt-4">
+          <ul class="pagination justify-content-center">
+            <!-- Prev button -->
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button
+                class="page-link"
+                (click)="currentPage = currentPage - 1"
+                [disabled]="currentPage === 1"
+              >
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+
+            <!-- Numbered pages -->
+            <li
+              *ngFor="let page of getPageNumbers()"
+              class="page-item"
+              [class.active]="page === currentPage"
+            >
+              <button class="page-link" (click)="currentPage = page">{{ page }}</button>
+            </li>
+
+            <!-- Next button -->
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button
+                class="page-link"
+                (click)="currentPage = currentPage + 1"
+                [disabled]="currentPage === totalPages"
+              >
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

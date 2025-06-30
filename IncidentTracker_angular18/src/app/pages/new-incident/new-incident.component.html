@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create new incident</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container-fluid py-4 bg-wrapper">
+    <div class="form-wrapper mx-auto">
+      
+      <!-- Page Title -->
+      <div class="mb-4">
+        <h1 class="h3 text-dark fw-bold">
+          <i class="bi bi-exclamation-triangle-fill me-2 text-primary"></i>
+          {{ isEditMode ? 'Edit Incident' : 'Create New Incident' }}
+        </h1>
+      </div>
+
+      <!-- Incident Form Card -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h6 class="mb-0">
+            {{ isEditMode ? 'Modify the incident details below' : 'Fill out the form to report a new incident' }}
+          </h6>
+        </div>
+        <div class="card-body">
+          <form #incidentForm="ngForm" (ngSubmit)="onSave()" novalidate>
+
+            <!-- Incident Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label fw-semibold">Incident Title *</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                class="form-control"
+                placeholder="Enter a short incident title"
+                [ngClass]="{ 'is-invalid': showTitleError }"
+                [(ngModel)]="newIncidentObj.title"
+                maxlength="50"
+                required
+              />
+              <div class="form-text">Be descriptive and specific (e.g., “WiFi Down - Floor 3”)</div>
+              <div class="invalid-feedback d-block" *ngIf="showTitleError">
+                Please enter a title.
+              </div>
+            </div>
+
+            <!-- Incident Description -->
+            <div class="mb-3">
+              <label for="description" class="form-label fw-semibold">Description *</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="4"
+                class="form-control"
+                placeholder="Describe the incident in detail..."
+                [ngClass]="{ 'is-invalid': showDescriptionError }"
+                [(ngModel)]="newIncidentObj.description"
+                maxlength="2000"
+                required
+              ></textarea>
+              <div class="form-text">Include relevant details, steps to reproduce, and impact</div>
+              <div class="invalid-feedback d-block" *ngIf="showDescriptionError">
+                Please enter a description.
+              </div>
+            </div>
+
+            <!-- Location (Optional) -->
+            <div class="mb-3">
+              <label for="location" class="form-label fw-semibold">Location</label>
+              <input
+                id="location"
+                name="location"
+                type="text"
+                class="form-control"
+                placeholder="Building, room, or area"
+                [(ngModel)]="newIncidentObj.location"
+                maxlength="50"
+              />
+              <div class="form-text">Where did this occur?</div>
+            </div>
+
+            <!-- Urgency -->
+            <div class="mb-3">
+              <label for="urgency" class="form-label fw-semibold">Urgency Level *</label>
+              <select
+                id="urgency"
+                name="urgency"
+                class="form-select"
+                [ngClass]="{ 'is-invalid': showUrgencyError }"
+                [(ngModel)]="newIncidentObj.urgency"
+                required
+              >
+                <option value="" disabled selected>Select urgency level...</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+              <div class="form-text">Choose based on the business impact</div>
+              <div class="invalid-feedback d-block" *ngIf="showUrgencyError">
+                Please select an urgency level.
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <button type="button" class="btn btn-outline-secondary" (click)="goToIncidentList()">
+                <i class="bi bi-x-circle me-1"></i> Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
+                {{ isEditMode ? 'Update Incident' : 'Create Incident' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
