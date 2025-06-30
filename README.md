@@ -10,11 +10,13 @@ A full-stack CRUD web application for tracking IT/facility incidents. Built with
 
 ## Project Structure
 
+```
 incident-tracker/
-├── IncidentTracker.API/ # .NET 8 backend
-├── incident-tracker-frontend/ # Angular 18 frontend
-├── IncidentTracker_database/ # SQL Server .bak file
+├── IncidentTracker.API/             # .NET 8 backend
+├── IncidentTracker_angular18/       # Angular 18 frontend
+├── IncidentTracker_database/        # SQL Server .bak file
 └── README.md
+```
 
 ---
 
@@ -23,7 +25,7 @@ incident-tracker/
 ### Prerequisites
 
 - Node.js 20+ and NPM 10+
-- Angular CLI (`npm install -g @angular/cli`)
+- Angular CLI: `npm install -g @angular/cli`
 - .NET 8 SDK
 - SQL Server (LocalDB, Express, or Developer Edition)
 - Visual Studio 2022+ (recommended)
@@ -48,21 +50,29 @@ incident-tracker/
    "ConnectionStrings": {
      "IncidentTrackerDbConnection": "Server=YOUR_SQL_SERVER;Database=IncidentTrackerDb;Trusted_Connection=True;TrustServerCertificate=True;"
    }
-4. Launch the project (F5 or run from terminal):
+3. Launch the project (F5 or run from terminal):
+   ```bash
    dotnet run --project IncidentTracker.API
+   ```
 
 ---
 
 ### Frontend Setup (IncidentTracker_angular18)
 
 1. Open a terminal and go to the frontend folder:
+   ```bash
    cd IncidentTracker\IncidentTracker_angular18
+   ```
 2. Install dependencies:
+   ```bash
    npm install
+   ```
 3. Start the Angular Dev server:
+   ```bash
    ng serve
+   ```
 4. Open your browser and go to:
-   http://localhost:4200
+   [http://localhost:4200](http://localhost:4200)
 
 ---
 
@@ -75,5 +85,5 @@ incident-tracker/
 ---
 
 ## Notes
- - .bak file is included in /IncidentTracker_database for easy DB setup
- - The API defaults to https://localhost:7057
+ - `.bak` file is included in `/IncidentTracker_database/` for easy DB setup
+ - The API defaults to [https://localhost:7057](https://localhost:7057).
