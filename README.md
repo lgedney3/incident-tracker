@@ -84,6 +84,5 @@ incident-tracker/
 
 ---
 
-## Notes
- - `.bak` file is included in `/IncidentTracker_database/` for easy DB setup
+## Note
  - The API defaults to [https://localhost:7057](https://localhost:7057).
